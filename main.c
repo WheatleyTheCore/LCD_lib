@@ -41,6 +41,7 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
+#include "LCD_lib.h"
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
@@ -52,106 +53,13 @@ void main(void)
 {
 	PE_low_level_init();
   /* Write your local variable definition here */
-	(void)TI1_Enable();
-	
-	// init the display
-	Cpu_Delay100US(1000); //wait for power up
-	
-	RS_PutVal(0); //select instruction register
-	
-	DataPins_PutVal(0x03); //send 0011 three times
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	
-	
-	DataPins_PutVal(0x02); //send 0010
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	
-	E_PutVal(1);          // send 0010
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	
-	
-	DataPins_PutVal(0x08); // send 1000
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	
-	//ANY COMMAND FROM HERE
-	
-//	DataPins_PutVal(0x00);  //send 0000
-//	E_PutVal(1);
-//	E_PutVal(0);
-//	Cpu_Delay100US(100);
-//	
-//	
-//	DataPins_PutVal(0x01); // send 1000
-//	E_PutVal(1);
-//	E_PutVal(0);
-//	Cpu_Delay100US(100);
-	
-	DataPins_PutVal(0x00); //send 0000
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	
-	DataPins_PutVal(0x01); //send 0001
-	Cpu_Delay100US(100);
-	Cpu_Delay100US(100);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	
-	DataPins_PutVal(0x00); //send 0000
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	
-	DataPins_PutVal(0x0f); // send 1111
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
+	init();
 	
 	
 	// BEGIN SENDING CHAR
 	
-	RS_PutVal(1);
-	Cpu_Delay100US(100);
-	DataPins_PutVal(0x0f);
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
-	DataPins_PutVal(0x04);
-	Cpu_Delay100US(100);
-	E_PutVal(1);
-	Cpu_Delay100US(100);
-	E_PutVal(0);
-	Cpu_Delay100US(100);
+	sendByteDR(0x0f); //first half
+	sendByteDR(0x04); //second half
 	
 	
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
