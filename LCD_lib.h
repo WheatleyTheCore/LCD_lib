@@ -16,5 +16,8 @@ void sendByteIR(byte dataByte);
 
 void pulseE(void);
 
+void sendNumberDR(uint32_t v);
+
+extern volatile int i;
 
 #endif /* LCD_LIB_H_ */
