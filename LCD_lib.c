@@ -2,8 +2,9 @@
 #include "Cpu.h"
 #include "E.h"
 #include "RS.h"
-#include "DataBits.h"
+#include "DataPins.h"
 #include "LCD_lib.h"
+#include <string.h>
 /* Include Prototypes for your library, if applicable */
 /* #include "mylibrary.h" */
 
@@ -38,24 +39,49 @@ void sendByteDR(byte dataByte) {
 	//delay
 	Cpu_Delay100US(100);
 	
-	//set dataByte
-	DataPins_PutVal(dataByte); 
+	//set first half of dataByte
+	DataPins_PutVal(dataByte >> 4); 
+	
+	//pulse E
+	pulseE();
+	
+	//set second half of dataByte
+	DataPins_PutVal(dataByte & 0x0F);
 	
 	//pulse E
 	pulseE();
 }
 
-void sendByteIR(byte dataByte){
-	//if RS is high, set low
-	if (RS_GetVal()) {
-			RS_PutVal(0);
+void sendNumberDR(uint32_t v) {
+	uint32_t mask = 1000000000;
+	char digit;
+	while (mask) {
+		digit = '0';
+		while (v >= mask) {
+			digit++;
+			v -= mask;
 		}
+		sendByteDR(digit | 0x30);
+		mask /= 10;
+	}
+	return;
+}
+
+void sendByteIR(byte dataByte){
+		RS_PutVal(0);
 		
 		//delay
-		Cpu_Delay100US(100);
+		Cpu_Delay100US(1);
 		
 		//set dataByte
-		DataPins_PutVal(dataByte); 
+		//set first half of dataByte
+		DataPins_PutVal(dataByte >> 4); 
+			
+		//pulse E
+		pulseE();
+			
+		//set second half of dataByte
+		DataPins_PutVal(dataByte & 0x0F);
 		
 		//pulse E
 		pulseE();
@@ -63,13 +89,13 @@ void sendByteIR(byte dataByte){
 
 void pulseE(void) {
 	//delay 100us
-	Cpu_Delay100US(100);
+	Cpu_Delay100US(1);
 	//set E high
 	E_PutVal(1);
 	// Delay again
-	Cpu_Delay100US(100);
+	Cpu_Delay100US(1);
 	//set E low 
 	E_PutVal(0);
 	//Delay
-	Cpu_Delay100US(100);
+	Cpu_Delay100US(1);
 }
